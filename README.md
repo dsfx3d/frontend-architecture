@@ -20,7 +20,15 @@ validator belongs — stated independently of any specific framework or library.
 
 ## Installation
 
-_(pending — see [issue #16](https://github.com/dsfx3d/frontend-architecture/issues/16))_
+Via [`npx skills`](https://github.com/vercel-labs/skills):
+
+```
+npx skills add dsfx3d/frontend-architecture
+```
+
+Or manually: copy `SKILL.md`, `references/`, and `LICENSE.txt` into
+`.claude/skills/frontend-architecture/` (project-level) or
+`~/.claude/skills/frontend-architecture/` (user-level).
 
 ## License
 
