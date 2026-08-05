@@ -25,6 +25,10 @@ The [data/service boundary](data-service-boundary.md) topic fixes that component
 
 Whether a page needs the bridge is decided per page, not mandated globally — the query cache only matters once a client component genuinely needs to independently refetch, invalidate, or mutate that data after first render.
 
+## Data staleness: a declared policy per route, not the framework's default
+
+A route's fetched data is only as fresh as its framework's caching layer allows it to be — every server-rendering framework caches fetches by default and provides some mechanism to override that per route or per fetch: mark data as always-revalidate, revalidate-on-interval, or fetched-once-and-frozen. Don't inherit the default silently; declare a staleness/revalidation policy per route type using the framework's native cache/revalidation mechanism, matched to how often that route's underlying data actually changes. This is a *when*-is-data-stale decision, distinct from the *where*-does-code-live rules above.
+
 ## URL params a page's fetch depends on
 
 A page's server-side params only reflect a URL-sync-library-managed param when that param is written to trigger a real navigation/round-trip (a URL-sync library may default to a shallow update that skips this). If a page's fetch reads a URL param, that param must be declared to trigger the round-trip on the client side, or the page keeps rendering stale data after the URL changes. See [state-management layering](state-management.md)'s "URL as a state channel".
