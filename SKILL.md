@@ -17,6 +17,12 @@ Stack-agnostic placement rules for a component-based frontend: where a component
 | Page composition & data loading | composing a page or route | [page-composition.md](references/page-composition.md) |
 | Forms & schema validation | wiring a form to validation | [forms-validation.md](references/forms-validation.md) |
 
+## Project-initialization
+
+Before placing new work under any of these six topics, check for `docs/frontend-architecture/` at the current package root. If missing, initialization runs silently once, scanning all six topics into per-topic docs and an index — informing every topic below with this project's actual stack and conventions, without ever overriding this skill's own patterns. Trigger detail, scan mechanics, staleness, and the dependency gate on `grilling`/`domain-modeling`: [init.md](references/init.md).
+
+These six topics place *new* work — a new component, a new call, a new form, a new page. Default mode is strictly additive: it never proposes or performs a refactor of your existing code, even where project-initialization scanning (see [init.md](references/init.md)) finds it diverging from these patterns. Divergence gets recorded and flagged for you to weigh, not acted on. A future non-default mode (audit, refactor, or migration) may relax this — not designed here.
+
 ## Placing a new shared component
 
 Placement is decided by reuse/coupling scope and composition depth — never by statefulness. Four tiers, `ui` -> `atom` -> `molecules` -> `organisms`, importing downward only; features and pages sit above them. Full placement criterion, the two classes of UI state that justify it, and the app-shell exception: [component-tiering.md](references/component-tiering.md).

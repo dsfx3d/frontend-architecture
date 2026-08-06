@@ -18,6 +18,12 @@ validator belongs — stated independently of any specific framework or library.
 - [Page composition & data loading](references/page-composition.md) — composing a page or route
 - [Forms & schema validation](references/forms-validation.md) — wiring a form to validation
 
+## Prerequisites
+
+The six placement-rule topics above have no prerequisites — they work standalone.
+
+Project-initialization (auto-detected `docs/frontend-architecture/` scanning) additionally requires the `grilling` and `domain-modeling` skills to be installed alongside this one. Without them, init won't run — the six topics still work, just without project-specific context.
+
 ## Installation
 
 Via [`npx skills`](https://github.com/vercel-labs/skills):
