@@ -1,0 +1,16 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "frontend-architecture",
+  "description": "Stack-agnostic component-based frontend architecture skill",
+  "owner": {
+    "name": "Yashodhan Singh",
+    "email": "dsfx3d@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "frontend-architecture",
+      "description": "Patterns for structuring a component-based frontend app — component tiering, feature-folder organization, data/service boundaries, state-management layering, page composition & data loading, and forms/schema validation.",
+      "source": "./"
+    }
+  ]
+}

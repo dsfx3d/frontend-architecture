@@ -1,0 +1,14 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "frontend-architecture",
+  "version": "0.1.0",
+  "description": "Patterns for structuring a component-based frontend app — component tiering, feature-folder organization, data/service boundaries, state-management layering, page composition & data loading, and forms/schema validation.",
+  "author": {
+    "name": "Yashodhan Singh",
+    "email": "dsfx3d@gmail.com"
+  },
+  "license": "Apache-2.0",
+  "skills": [
+    "./"
+  ]
+}

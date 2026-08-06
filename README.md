@@ -26,6 +26,15 @@ Project-initialization (auto-detected `docs/frontend-architecture/` scanning) ad
 
 ## Installation
 
+As a Claude Code plugin — installs the skill and keeps it updatable via the
+plugin system, so any agent session picks it up automatically when it matches
+this skill's description:
+
+```
+claude plugin marketplace add dsfx3d/frontend-architecture
+claude plugin install frontend-architecture
+```
+
 Via [`npx skills`](https://github.com/vercel-labs/skills):
 
 ```
