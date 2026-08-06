@@ -10,7 +10,9 @@
     {
       "name": "frontend-architecture",
       "description": "Patterns for structuring a component-based frontend app — component tiering, feature-folder organization, data/service boundaries, state-management layering, page composition & data loading, and forms/schema validation.",
-      "source": "./"
+      "source": "./",
+      "category": "development",
+      "homepage": "https://github.com/dsfx3d/frontend-architecture"
     }
   ]
 }
