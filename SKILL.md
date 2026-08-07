@@ -12,7 +12,7 @@ Stack-agnostic placement rules for a component-based frontend: where a component
 
 Before placing new work under any of these six topics, check for `docs/frontend-architecture/` at the current package root. If missing, initialization runs silently once, scanning all six topics into per-topic docs and an index — informing every topic below with this project's actual stack and conventions, without ever overriding this skill's own patterns. Trigger detail, scan mechanics, staleness, and the dependency gate on `grilling`/`domain-modeling`: [init.md](references/init.md).
 
-These six topics place *new* work — a new component, a new call, a new form, a new page. Default mode is strictly additive: it never proposes or performs a refactor of your existing code, even where project-initialization scanning (see [init.md](references/init.md)) finds it diverging from these patterns. Divergence gets recorded and flagged for you to weigh, not acted on. A non-default **Audit mode** (below) can re-surface that divergence on demand across your existing code without waiting for new placement work — it's still read-only, only reporting, never fixing. A future refactor or migration mode may relax the fix boundary itself — not designed here.
+These six topics place *new* work — a new component, a new call, a new form, a new page. Default mode is strictly additive: it never proposes or performs a refactor of your existing code, even where project-initialization scanning (see [init.md](references/init.md)) finds it diverging from these patterns. Divergence gets recorded and flagged for you to weigh, not acted on. A non-default **Audit mode** (below) can re-surface that divergence on demand across your existing code without waiting for new placement work — it's still read-only, only reporting, never fixing. A non-default **Refactor mode** (below) relaxes this boundary one step further: it composes Audit mode's scan with Plan mode's charting into a decisions-only map, then makes a one-time offer to execute the resolved plan once the map's frontier is exhausted. A future migration mode may relax the fix boundary further still — not designed here.
 
 ## Audit mode
 
@@ -25,6 +25,14 @@ On an explicit, unambiguous request to plan an effort that also names frontend-a
 > Plan mode only engages when frontend-architecture is explicitly named alongside a planning request. An ordinary `/wayfinder` invocation with no mention of frontend-architecture proceeds as wayfinder's own standalone map-charting — this skill never intercepts it.
 
 Trigger phrasing, the enrichment pass, Notes shape, the no-init heads-up, scope, and the dependency gate: [plan.md](references/plan.md).
+
+## Refactor mode
+
+On an explicit request that both asks to plan a refactor and names frontend-architecture or one of its topics — e.g. `` `/frontend-architecture refactor this` `` — not on a request that's merely refactor-shaped without naming the skill, the agent composes Audit mode's diagnostic scan with Plan mode's `wayfinder`-charting rather than reinventing either: it runs Audit's full scan against a given path (default: package root), hands the resulting Conflicts/Exceptions as seed context into `wayfinder`'s destination-naming and Notes, then lets a normal breadth-first grilling pass decide the real ticket set — grouping, prioritizing, or dropping findings, never a mechanical one-ticket-per-finding dump. The resulting map stays decisions-only, same as any `wayfinder` map, but relaxes the fix boundary one step further than audit mode ever does: once the map's frontier is exhausted, refactor mode makes a one-time offer to execute the resolved plan with `/implement` (preferred) or `/tdd` (fallback). Requires the `wayfinder`, `grilling`, and `domain-modeling` skills plus a configured issue tracker (`docs/agents/issue-tracker.md`); full bail-out if any are missing.
+
+> Refactor mode only engages when frontend-architecture is explicitly named alongside a request to plan a refactor. A bare `/wayfinder` invocation or a bare "refactor this" request never silently triggers it.
+
+Trigger phrasing, the dependency gate, scope, the diagnose-phase findings handoff, map seed shape, the execution offer, output shape, and drift handling: [refactor.md](references/refactor.md).
 
 ## Placing a new shared component
 
