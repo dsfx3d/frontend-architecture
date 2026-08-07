@@ -6,16 +6,7 @@ license: Complete terms in LICENSE.txt
 
 # Frontend architecture
 
-Stack-agnostic placement rules for a component-based frontend: where a component, a data call, a piece of state, or a form validator belongs. Six topics, cross-referenced; each is a full reference file under `references/`.
-
-| Topic | Use when… | Reference |
-|---|---|---|
-| Component tiering | placing a new shared component | [component-tiering.md](references/component-tiering.md) |
-| Feature-folder organization | structuring a new feature folder | [feature-folders.md](references/feature-folders.md) |
-| Data/service boundary | wiring a data or service call | [data-service-boundary.md](references/data-service-boundary.md) |
-| State-management layering | choosing where state should live | [state-management.md](references/state-management.md) |
-| Page composition & data loading | composing a page or route | [page-composition.md](references/page-composition.md) |
-| Forms & schema validation | wiring a form to validation | [forms-validation.md](references/forms-validation.md) |
+Stack-agnostic placement rules for a component-based frontend: where a component, a data call, a piece of state, or a form validator belongs. Six topics, cross-referenced; each is a full reference file under `references/`. The current topic registry — name, trigger phrase, gist, reference link, and scan parameters — lives at [references/index.md](references/index.md).
 
 ## Project-initialization
 
@@ -26,6 +17,14 @@ These six topics place *new* work — a new component, a new call, a new form, a
 ## Audit mode
 
 On an explicit, unambiguous request to assess existing code against these patterns — e.g. "audit this project," "check compliance" — not on an ordinary placement request, the agent scans all six topics (or a named subset) against a given path (default: package root) and reports where the code diverges. Read-only: it never proposes or applies a fix, only flags it for you to weigh, same as the divergence project-initialization records in passing. Findings refresh the same per-topic `Conflicts`/`Exceptions` sections project-initialization already maintains, via the same diff-proposal flow — audit is a way to re-run that scan on demand, not a separate report. Requires `docs/frontend-architecture/` to exist, silently running project-initialization first if it doesn't. Trigger phrasing, scope axes, scan mechanics, confidence hedging, and output shape: [audit.md](references/audit.md).
+
+## Plan mode
+
+On an explicit, unambiguous request to plan an effort that also names frontend-architecture or one of its topics/patterns — e.g. `/frontend-architecture plan this feature` — not on a request that's merely frontend-domain-shaped without naming the skill, the agent wraps `wayfinder`'s map-charting step: right after the destination is named, it gathers this skill's current guidance from [references/index.md](references/index.md) — every topic's gist, plus a fuller distillation and reference link for whichever topic(s) are judged relevant to the destination — and injects it into the resulting map's `Notes`, so every ticket on that map gets grilled with this guidance already in view. Doesn't require `docs/frontend-architecture/` to exist — it enriches with it when present, and surfaces a one-time heads-up when it's absent, rather than nudging you through project-initialization mid-charting. Requires the `wayfinder`, `grilling`, and `domain-modeling` skills; full bail-out if any are missing.
+
+> Plan mode only engages when frontend-architecture is explicitly named alongside a planning request. An ordinary `/wayfinder` invocation with no mention of frontend-architecture proceeds as wayfinder's own standalone map-charting — this skill never intercepts it.
+
+Trigger phrasing, the enrichment pass, Notes shape, the no-init heads-up, scope, and the dependency gate: [plan.md](references/plan.md).
 
 ## Placing a new shared component
 

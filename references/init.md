@@ -2,7 +2,7 @@
 
 ## Trigger
 
-Init fires when the agent has matched one of the six placement-rule topics and is about to act on it — not merely on this skill loading. At that point, check for `docs/frontend-architecture/` at the detected package root (see [package/monorepo detection](#packagemonorepo-detection) below). If it's missing, init runs and scans all six topics in one pass, not just the one that triggered it — so the index's topic-status table is honest from the moment it exists, rather than showing five "not yet scanned" rows next to one populated one.
+Init fires when the agent has matched one of the placement-rule topics in the [topic registry](index.md) and is about to act on it — not merely on this skill loading. At that point, check for `docs/frontend-architecture/` at the detected package root (see [package/monorepo detection](#packagemonorepo-detection) below). If it's missing, init runs and scans every topic in the registry in one pass, not just the one that triggered it — so the index's topic-status table is honest from the moment it exists, rather than showing most rows "not yet scanned" next to one populated one.
 
 Init runs silently — no confirmation prompt before it starts.
 
@@ -26,17 +26,17 @@ Before init runs, check for the `grilling` and `domain-modeling` skills under, i
 
 Each checked at project level (`<repo>/<path>`) then user level (`~/<path>`). The gate passes once both skills are found at any one location.
 
-**On failure**: full bail-out. Init creates nothing — no `docs/frontend-architecture/`, no scaffolding — because a skeleton with no real interview/decision-recording behind it would itself be a degraded, misleading artifact (looks initialized, isn't). The six topics keep working on the skill's own base patterns, same as before init existed.
+**On failure**: full bail-out. Init creates nothing — no `docs/frontend-architecture/`, no scaffolding — because a skeleton with no real interview/decision-recording behind it would itself be a degraded, misleading artifact (looks initialized, isn't). The placement-rule topics keep working on the skill's own base patterns, same as before init existed.
 
 Show this message once per session (an in-memory flag, nothing written to disk):
 
 > "Project-initialization requires the `grilling` and `domain-modeling` skills, not found under `.agents/skills/`, `.claude/skills/`, `.codex/skills/`, `.opencode/skills/`, or `.agent/skills/` (project or user level). Install them for your harness, then retry — the six placement-rule topics work fine without them in the meantime."
 
-## The six-topic scan
+## The topic scan
 
-One general procedure, applied to each topic, parameterized by topic — not six bespoke strategies:
+One general procedure, applied to each topic in the [topic registry](index.md), parameterized by topic — not a bespoke strategy per topic:
 
-1. Look up the topic's parameter row: keyword hints and file globs (see [per-topic scan parameters](#per-topic-scan-parameters) below).
+1. Look up the topic's row in the [topic registry](index.md) for its keyword hints and file globs.
 2. Walk sources in fixed order:
    - `package.json` / lockfile, grepped for the topic's keyword hints.
    - The topic's file globs.
@@ -50,20 +50,9 @@ Scan boundary: package-scoped (reuses the package-root boundary above), uncapped
 
 ### ADR and doc discovery
 
-Hybrid, same mechanism for all six topics: check a short fixed list of conventional paths first — `docs/adr/`, `docs/decisions/`, `adr/`, `docs/architecture/` — as high-confidence hits, then fall back to a keyword-filtered sweep of the rest of the package's `**/*.md` for anything the fixed list missed (same source-glob mechanism as step 2 above, aimed at markdown). This covers org opinions (README/CONTRIBUTING/style-guide docs) as the same kind of doc — no separate mechanism. Nothing found at either stage: "None found."
+Hybrid, same mechanism for every topic: check a short fixed list of conventional paths first — `docs/adr/`, `docs/decisions/`, `adr/`, `docs/architecture/` — as high-confidence hits, then fall back to a keyword-filtered sweep of the rest of the package's `**/*.md` for anything the fixed list missed (same source-glob mechanism as step 2 above, aimed at markdown). This covers org opinions (README/CONTRIBUTING/style-guide docs) as the same kind of doc — no separate mechanism. Nothing found at either stage: "None found."
 
-## Per-topic scan parameters
-
-| Topic | Keyword hints (package.json/lockfile) | File globs |
-|---|---|---|
-| [Component tiering](component-tiering.md) | `storybook`, `@radix-ui/*`, `shadcn`, `class-variance-authority`, `chakra-ui`, `@mui/material`, `tailwind-variants` | `**/ui/**`, `**/atoms/**`, `**/molecules/**`, `**/organisms/**`, `**/components/**` |
-| [Feature-folder organization](feature-folders.md) | `nx`, `turbo`, `@nrwl/*` | `**/features/**`, `**/modules/**`, `**/domains/**`, `**/src/pages/**`, `**/app/**` |
-| [Data/service boundary](data-service-boundary.md) | `axios`, `ky`, `@tanstack/react-query`, `swr`, `urql`, `@apollo/client`, `trpc`, `@trpc/client`, `zod`, `yup` | `**/services/**`, `**/api/**`, `**/queries/**`, `**/*.service.ts`, `**/*Api.ts` |
-| [State-management layering](state-management.md) | `zustand`, `redux`, `@reduxjs/toolkit`, `jotai`, `recoil`, `mobx`, `valtio`, `nuqs` | `**/store/**`, `**/stores/**`, `**/state/**`, `**/*.store.ts` |
-| [Page composition & data loading](page-composition.md) | `next`, `react-router`, `@remix-run/react`, `astro`, `@sveltejs/kit`, `gatsby` | `**/app/**/page.*`, `**/pages/**/*.tsx`, `**/routes/**`, `**/middleware.ts` |
-| [Forms & schema validation](forms-validation.md) | `react-hook-form`, `formik`, `@tanstack/react-form`, `@hookform/resolvers`, `zod`, `yup`, `vee-validate` | `**/schema/**`, `**/schemas/**`, `**/*Schema.ts`, `**/*.form.tsx`, `**/forms/**` |
-
-`zod`/`yup` and the schema globs are shared between the data/service-boundary and forms-validation rows — the schema folder holds both DTO and form-input schemas ([forms & schema validation](forms-validation.md#two-purposes-one-folder)); a hit there is classified by what the schema actually validates, not by which row found it.
+Per-topic keyword hints and file globs live in the [topic registry](index.md) — not duplicated here, so adding a topic never requires touching this file.
 
 ## Per-topic project-doc template
 
@@ -78,24 +67,24 @@ Recorded at `docs/frontend-architecture/<topic-slug>.md`, one per topic — slug
 Rules across all five sections:
 
 - Every bullet cites its source — a file path, an ADR link, or "inferred from repo structure." Sourcing is uniform across the template, not special-cased per section, though it matters most for Conventions/Conflicts/Exceptions, where a human has to judge what's being overridden or carved out.
-- A section with nothing to report is not omitted — it stays with an explicit "None found" line. This keeps the five-section shape identical across all six topic docs (needed for uniform rendering/diffing) and disambiguates "never scanned for this" from "scanned, found nothing."
+- A section with nothing to report is not omitted — it stays with an explicit "None found" line. This keeps the five-section shape identical across every topic doc (needed for uniform rendering/diffing) and disambiguates "never scanned for this" from "scanned, found nothing."
 
 ## index.md and the root-level monorepo map
 
-`docs/frontend-architecture/index.md` (package-level) loads on every invocation, so it stays a summary — never a rollup of full doc content:
+`docs/frontend-architecture/index.md` (package-level — not to be confused with the skill's own [topic registry](index.md)) loads on every invocation, so it stays a summary — never a rollup of full doc content:
 
-1. Topic table — the six topics, each linking to its doc, with a status per topic: `populated` / `not yet scanned` / `stale`.
+1. Topic table — every topic in the registry, each linking to its doc, with a status per topic: `populated` / `not yet scanned` / `stale`.
 2. Flagged-conflicts summary — existence + count per topic (e.g. "state-management: 1 conflict flagged"), not the conflict detail itself, so a flag surfaces even when its topic doc isn't loaded.
 3. Structural-exceptions summary — same shape, for exceptions.
-4. Last full scan — the most recent SHA/date across all six topics, a repo-wide staleness signal distinct from each topic's own `Last scanned`.
+4. Last full scan — the most recent SHA/date across every topic, a repo-wide staleness signal distinct from each topic's own `Last scanned`.
 
-For a monorepo (one `docs/frontend-architecture/` per package), a root-level map lives at `docs/frontend-architecture/index.md` at the repo root — same relative filename/pattern as a package-level index, distinguished by not sitting next to any per-topic docs of its own. Its content is a package table: one row per package, linking to that package's own `docs/frontend-architecture/index.md`, with conflict/exception counts pulled — not re-derived — from each package index. It carries no per-topic content itself: the six topics are only meaningful at the package level, so the root map never scans or judges, only aggregates links and counts.
+For a monorepo (one `docs/frontend-architecture/` per package), a root-level map lives at `docs/frontend-architecture/index.md` at the repo root — same relative filename/pattern as a package-level index, distinguished by not sitting next to any per-topic docs of its own. Its content is a package table: one row per package, linking to that package's own `docs/frontend-architecture/index.md`, with conflict/exception counts pulled — not re-derived — from each package index. It carries no per-topic content itself: the registry's topics are only meaningful at the package level, so the root map never scans or judges, only aggregates links and counts.
 
 ## Load model per invocation
 
 - Package-level `index.md` loads on every invocation.
 - A per-topic doc loads only on demand, alongside its matching reference file, when that topic is in play.
-- The root-level monorepo map is write-only from the agent's side — updated (or created) after init/refresh touches a package-level index — and is never read to inform a placement decision. The six topics are only meaningful at the package level, so there's nothing in the root map an invocation would need.
+- The root-level monorepo map is write-only from the agent's side — updated (or created) after init/refresh touches a package-level index — and is never read to inform a placement decision. The registry's topics are only meaningful at the package level, so there's nothing in the root map an invocation would need.
 
 ## Staleness and refresh
 

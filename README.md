@@ -24,6 +24,8 @@ The six placement-rule topics above have no prerequisites — they work standalo
 
 Project-initialization (auto-detected `docs/frontend-architecture/` scanning) additionally requires the `grilling` and `domain-modeling` skills to be installed alongside this one. Without them, init won't run — the six topics still work, just without project-specific context.
 
+Plan mode (explicitly-triggered project planning via `wayfinder`) additionally requires the `wayfinder`, `grilling`, and `domain-modeling` skills to be installed alongside this one. Without them, plan mode won't run — the six topics, project-initialization, and audit mode all still work as normal.
+
 ## Installation
 
 As a Claude Code plugin — installs the skill and keeps it updatable via the

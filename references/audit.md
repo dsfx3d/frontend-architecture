@@ -12,10 +12,10 @@ Audit requires `docs/frontend-architecture/` to exist, since its findings write 
 
 An audit run is scoped along two independent axes, either narrowable by how the request is phrased:
 
-- **Topic-set** — which of the six topics to scan. Default: all six.
+- **Topic-set** — which topic(s) in the [topic registry](index.md) to scan. Default: every registered topic.
 - **Path** — which subtree of the package to scan. Default: package root. A path only narrows when named explicitly (e.g. "audit the checkout feature") — never picked up from ambient/conversational context (e.g. "the file I was just editing"), so what got audited is always exactly what was said.
 
-The two axes are orthogonal: naming a path doesn't implicitly filter topics. "Audit checkout" still scans all six topics against that path, unfiltered — a topic with nothing found there just reports no new findings, it isn't skipped. Mirrors project-init's "scan all six, not just the triggering one" reasoning ([init.md](init.md#trigger)).
+The two axes are orthogonal: naming a path doesn't implicitly filter topics. "Audit checkout" still scans every registered topic against that path, unfiltered — a topic with nothing found there just reports no new findings, it isn't skipped. Mirrors project-init's "scan every registered topic, not just the triggering one" reasoning ([init.md](init.md#trigger)).
 
 **Monorepo boundary**: audit reuses project-init's existing [package/monorepo detection](init.md#packagemonorepo-detection) — one package per scan, same as init. A bare "audit this project" at a detected monorepo loops all packages internally and rolls the results up into the root-level `index.md`'s aggregate conflict/exception counts — the same aggregation project-init's root map already does (see [index.md and the root-level monorepo map](init.md#indexmd-and-the-root-level-monorepo-map)), just triggered from the audit side rather than only after individual package init/refresh. No disambiguation prompt for the common, unqualified case.
 
@@ -23,7 +23,7 @@ The two axes are orthogonal: naming a path doesn't implicitly filter topics. "Au
 
 ## Scan mechanics
 
-Audit reuses project-init's [six-topic scan](init.md#the-six-topic-scan) verbatim — no new detection technique. Init's step 3 already collects hits at path+snippet (instance) granularity, and step 4 already groups hits into one bullet per distinct pattern — the exact mechanism [finding granularity](#finding-granularity) below needs. Enumerating every component/feature instance rather than sampling was never a real alternative here: init's scan is already uncapped (no depth/file-count limit), not a sample.
+Audit reuses project-init's [topic scan](init.md#the-topic-scan) verbatim — no new detection technique. Init's step 3 already collects hits at path+snippet (instance) granularity, and step 4 already groups hits into one bullet per distinct pattern — the exact mechanism [finding granularity](#finding-granularity) below needs. Enumerating every component/feature instance rather than sampling was never a real alternative here: init's scan is already uncapped (no depth/file-count limit), not a sample.
 
 Three refinements layer on top of the unchanged procedure, rather than replacing it:
 
